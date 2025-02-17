@@ -29,11 +29,15 @@ spring:
     console:
       enabled: true
   kafka:
-    bootstrap-servers: localhost:9092
     consumer:
-      group-id: amcom-dev
+      enable-auto-commit: false
+      auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     producer:
+      acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    listener:
+      ack-mode: manual_immediate
+    bootstrap-servers: http://localhost:19092

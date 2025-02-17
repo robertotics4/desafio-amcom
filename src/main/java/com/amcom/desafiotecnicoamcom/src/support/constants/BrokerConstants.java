@@ -9,4 +9,10 @@ public class BrokerConstants {
         public static final String EXTERNAL_AVAILABLE_ORDER_TOPIC = "amcom.external.available_order";
         public static final String EXTERNAL_PROCESSED_ORDER_TOPIC = "amcom.external.processed_order";
     }
+
+    public static final class Consumer {
+        private Consumer(){}
+
+        public static final String GROUP_ID = "amcom.order-processing";
+    }
 }
