@@ -26,11 +26,4 @@ public class Product {
 
     @Column(name = "price", nullable = false)
     private BigDecimal price;
-
-    @Column(name = "quantity", nullable = false)
-    private Integer quantity;
-
-    @ManyToOne
-    @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
-    private Order order;
 }

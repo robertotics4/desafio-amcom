@@ -13,18 +13,16 @@ spring:
       connection-test-query: SELECT 1
       pool-name: HikariPool-1
       leak-detection-threshold: 2000
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:amcomdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
-    username: sa
-    password: password
+    username: amcom_user
+    password: amcom_password
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
-        hbm2ddl:
-          auto: none
   h2:
     console:
       enabled: true
