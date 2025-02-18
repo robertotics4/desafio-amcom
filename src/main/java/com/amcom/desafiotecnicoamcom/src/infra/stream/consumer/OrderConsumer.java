@@ -1,5 +1,6 @@
 package com.amcom.desafiotecnicoamcom.src.infra.stream.consumer;
 
+import com.amcom.desafiotecnicoamcom.src.config.jackson.JsonConverter;
 import com.amcom.desafiotecnicoamcom.src.domain.dto.CreateOrderDTO;
 import com.amcom.desafiotecnicoamcom.src.domain.entity.Order;
 import com.amcom.desafiotecnicoamcom.src.domain.service.CreateOrderService;
@@ -19,13 +20,14 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class OrderConsumer {
     private final CreateOrderService createOrderService;
-    private final KafkaTemplate<String, CreateOrderDTO> kafkaTemplate;
+    private final JsonConverter jsonConverter;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @KafkaListener(
             topics = BrokerConstants.Topics.EXTERNAL_AVAILABLE_ORDER_TOPIC,
             groupId = BrokerConstants.Consumer.GROUP_ID
     )
-    public void consumeOrder(ConsumerRecord<String, CreateOrderDTO> record, Acknowledgment acknowledgment) {
+    public void consumeOrder(ConsumerRecord<String, String> record, Acknowledgment acknowledgment) {
         int retries = 0;
         boolean processed = false;
 
@@ -34,7 +36,7 @@ public class OrderConsumer {
             try {
                 log.info("[KAFKA-CONSUMER] KEY={} | VALUE={}", record.key(), record.value());
 
-                CreateOrderDTO createOrderDTO = new CreateOrderDTO(record.value().externalId(), record.value().products());
+                CreateOrderDTO createOrderDTO = jsonConverter.getObject(record.value().toString(), CreateOrderDTO.class);
                 Order order = this.createOrderService.execute(createOrderDTO);
 
                 acknowledgment.acknowledge();

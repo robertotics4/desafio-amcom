@@ -1,4 +1,4 @@
-package com.amcom.desafiotecnicoamcom.src.config;
+package com.amcom.desafiotecnicoamcom.src.config.kafka;
 
 import com.amcom.desafiotecnicoamcom.src.support.constants.BrokerConstants;
 import org.apache.kafka.clients.admin.NewTopic;
