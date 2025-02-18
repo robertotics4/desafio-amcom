@@ -33,9 +33,10 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
     producer:
-      acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+      batch-size: 65536
     listener:
       ack-mode: manual_immediate
-    bootstrap-servers: http://localhost:19092
+    bootstrap-servers: PLAINTEXT://localhost:19092

@@ -6,8 +6,7 @@ import lombok.Getter;
 public enum OrderStatus {
     AVAILABLE(0, "DISPONÍVEL"),
     PROCESSED(1, "PROCESSADO"),
-    INTEGRATED(3, "PEDIDO INTEGRADO"),
-    ERROR(99, "ERRO");
+    INTEGRATED(3, "PEDIDO INTEGRADO");
 
     private final int code;
     private final String description;

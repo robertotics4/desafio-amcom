@@ -2,7 +2,7 @@ version: "2"
 services:
   kafka:
     container_name: kafka
-    image: quay.io/strimzi/kafka:latest-kafka-2.8.1-amd64
+    image: quay.io/strimzi/kafka:latest-kafka-3.1.0-amd64
     command:
       [
         "sh",
@@ -30,6 +30,7 @@ services:
       - "19000:9000"
     environment:
       KAFKA_BROKERCONNECT: kafka:39092
+      SCHEMAREGISTRY_CONNECT: http://schema-registry:8081
 
 networks:
   network-kafka:
