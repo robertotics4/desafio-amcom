@@ -7,14 +7,17 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Tag(name = "Produtos", description = "Endpoints destinados a lidar com gerenciamento de produtos.")
 @RestController
+@Validated
 @RequestMapping("/v1/products")
 public interface ProductResource {
 
@@ -34,5 +37,5 @@ public interface ProductResource {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
     })
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Product> create(@RequestBody CreateProductDTO dto);
+    ResponseEntity<Product> create(@Valid @RequestBody CreateProductDTO dto);
 }

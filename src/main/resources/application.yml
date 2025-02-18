@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: desafio-tecnico-amcom
+    name: @project.name@
   output:
     ansi:
       enabled: always
@@ -15,7 +15,7 @@ spring:
 # ACTUATOR INFO - BEGIN
 info:
   app:
-    name: desafio-tecnico-amcom
+    name: @project.name@
     description: @project.description@
     version: @project.version@
     encoding: @project.build.sourceEncoding@

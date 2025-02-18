@@ -2,6 +2,8 @@ package com.amcom.desafiotecnicoamcom.src.domain.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,15 +28,18 @@ public class OrderProduct {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
+    @NotNull(message = "O pedido não pode ser nulo")
     @Schema(description = "Pedido ao qual o produto está associado")
     private Order order;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
+    @NotNull(message = "O produto não pode ser nulo")
     @Schema(description = "Produto associado ao pedido")
     private Product product;
 
     @Column(name = "quantity", nullable = false)
+    @Positive(message = "A quantidade deve ser positiva")
     @Schema(description = "Quantidade do produto no pedido", example = "2")
     private int quantity;
 }

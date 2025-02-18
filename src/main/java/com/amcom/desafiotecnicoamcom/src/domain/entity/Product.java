@@ -2,6 +2,9 @@ package com.amcom.desafiotecnicoamcom.src.domain.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,10 +29,12 @@ public class Product {
     private UUID id;
 
     @Column(name = "name", nullable = false)
+    @NotNull(message = "O nome do produto não pode ser nulo")
     @Schema(description = "Nome do produto", example = "Produto A")
     private String name;
 
     @Column(name = "price", nullable = false)
+    @Min(value = 0, message = "O preço deve ser maior ou igual a 0")
     @Schema(description = "Preço do produto", example = "49.99")
     private BigDecimal price;
 }
