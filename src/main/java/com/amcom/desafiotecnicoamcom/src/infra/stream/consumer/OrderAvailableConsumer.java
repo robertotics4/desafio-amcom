@@ -1,7 +1,6 @@
 package com.amcom.desafiotecnicoamcom.src.infra.stream.consumer;
 
 import com.amcom.desafiotecnicoamcom.src.domain.entity.Order;
-import com.amcom.desafiotecnicoamcom.src.infra.repository.OrderRepository;
 import com.amcom.desafiotecnicoamcom.src.support.constants.BrokerConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class OrderAvailableConsumer {
-    private final OrderRepository orderRepository;
-
     @KafkaListener(
             topics = BrokerConstants.Topics.EXTERNAL_AVAILABLE_ORDER_TOPIC,
             groupId = BrokerConstants.Consumer.GROUP_ID
