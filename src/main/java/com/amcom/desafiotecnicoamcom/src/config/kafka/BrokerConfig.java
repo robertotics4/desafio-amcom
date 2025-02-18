@@ -35,11 +35,11 @@ public class BrokerConfig {
                 .build();
     }
 
-    @Bean
-    public NewTopic processedOrderDeadLetterTopic() {
-        return TopicBuilder.name(BrokerConstants.Topics.EXTERNAL_PROCESSED_ORDER_TOPIC + ".dlq")
-                .partitions(PARTITIONS)
-                .replicas(REPLICAS)
-                .build();
-    }
+//    @Bean
+//    public NewTopic processedOrderDeadLetterTopic() {
+//        return TopicBuilder.name(BrokerConstants.Topics.EXTERNAL_PROCESSED_ORDER_TOPIC + ".dlq")
+//                .partitions(PARTITIONS)
+//                .replicas(REPLICAS)
+//                .build();
+//    }
 }

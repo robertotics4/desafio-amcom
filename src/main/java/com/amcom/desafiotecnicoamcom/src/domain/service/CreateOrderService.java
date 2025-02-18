@@ -2,6 +2,7 @@ package com.amcom.desafiotecnicoamcom.src.domain.service;
 
 import com.amcom.desafiotecnicoamcom.src.config.jackson.JsonConverter;
 import com.amcom.desafiotecnicoamcom.src.domain.contract.ICreateOrderService;
+import com.amcom.desafiotecnicoamcom.src.domain.contract.IIntegrateOrderService;
 import com.amcom.desafiotecnicoamcom.src.domain.dto.CreateOrderDTO;
 import com.amcom.desafiotecnicoamcom.src.domain.dto.ProductOrderDTO;
 import com.amcom.desafiotecnicoamcom.src.domain.entity.Order;
@@ -23,7 +24,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,22 +33,55 @@ public class CreateOrderService implements ICreateOrderService {
     private final ProductRepository productRepository;
     private final IProducer producer;
     private final JsonConverter jsonConverter;
+    private final IIntegrateOrderService integrateOrderService;
 
     @Override
     @Transactional
-    @Retryable(value = BusinessException.class, backoff = @Backoff(delay = 2000))
     public Order execute(CreateOrderDTO dto) {
-        log.info("[SERVICE]: PROCESSAMENTO DO PEDIDO - EXTERNAL ID {}", dto.externalId());
+        log.info("[SERVICE]: PROCESSANDO PEDIDO - ID {}", dto.externalId());
 
         if (orderRepository.existsByExternalId(dto.externalId())) {
-            this.sendToDlqTopic(dto);
-            throw new BusinessException("Pedido já existente ID " + dto.externalId());
+            sendToDlq(dto, "Pedido já existente");
         }
 
         List<OrderProduct> orderProducts = mapOrderProducts(dto);
-        BigDecimal totalPrice = calculateTotalPrice(orderProducts);
+        Order order = buildOrder(dto.externalId(), orderProducts);
+
+        return this.integrateOrderService.execute(order);
+    }
+
+    private List<OrderProduct> mapOrderProducts(CreateOrderDTO dto) {
+        if (dto.products().isEmpty()) {
+            sendToDlq(dto, "Pedido sem produtos");
+        }
+
+        List<UUID> productIds = dto.products().stream().map(ProductOrderDTO::id).toList();
+        List<Product> products = productRepository.findAllById(productIds);
+
+        if (products.size() != productIds.size()) {
+            sendToDlq(dto, "Pedido contém produtos inválidos");
+        }
+
+        return dto.products().stream().map(productOrder -> {
+            Product product = products.stream()
+                    .filter(p -> p.getId().equals(productOrder.id()))
+                    .findFirst()
+                    .orElseThrow(() -> new BusinessException("Produto não encontrado: " + productOrder.id()));
+
+            return OrderProduct.builder()
+                    .product(product)
+                    .quantity(productOrder.quantity())
+                    .build();
+        }).toList();
+    }
+
+    private Order buildOrder(UUID externalId, List<OrderProduct> orderProducts) {
+        BigDecimal totalPrice = orderProducts.stream()
+                .map(op -> op.getProduct().getPrice().multiply(BigDecimal.valueOf(op.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         Order order = Order.builder()
-                .externalId(dto.externalId())
+                .externalId(externalId)
                 .status(OrderStatus.PROCESSED)
                 .totalPrice(totalPrice)
                 .orderProducts(orderProducts)
@@ -56,58 +89,15 @@ public class CreateOrderService implements ICreateOrderService {
 
         orderProducts.forEach(op -> op.setOrder(order));
 
-        Order createdOrder = orderRepository.save(order);
-        String orderJson = jsonConverter.getJsonOfObject(createdOrder);
+        orderRepository.save(order);
 
-        log.info("[PRODUCER]: ENVIANDO {} para {}", orderJson, BrokerConstants.Topics.EXTERNAL_PROCESSED_ORDER_TOPIC);
-        this.producer.produce(BrokerConstants.Topics.EXTERNAL_PROCESSED_ORDER_TOPIC, createdOrder.getExternalId().toString(), orderJson);
-
-        return createdOrder;
+        return order;
     }
 
-    private List<OrderProduct> mapOrderProducts(CreateOrderDTO dto) {
-        List<ProductOrderDTO> orderProducts = dto.products();
-
-        if (orderProducts.isEmpty()) {
-            this.sendToDlqTopic(dto);
-            throw new BusinessException("O pedido não possui produtos");
-        }
-
-        List<UUID> productIds = orderProducts.stream()
-                .map(ProductOrderDTO::id)
-                .collect(Collectors.toList());
-
-        List<Product> existingProducts = productRepository.findAllById(productIds);
-
-        if (existingProducts.size() != productIds.size()) {
-            this.sendToDlqTopic(dto);
-            throw new BusinessException("O pedido contém produtos inválidos");
-        }
-
-        return orderProducts.stream()
-                .map(productOrder -> {
-                    Product product = existingProducts.stream()
-                            .filter(p -> p.getId().equals(productOrder.id()))
-                            .findFirst()
-                            .orElseThrow(() -> new BusinessException("Produto não encontrado: " + productOrder.id()));
-
-                    return OrderProduct.builder()
-                            .product(product)
-                            .quantity(productOrder.quantity())
-                            .build();
-                })
-                .collect(Collectors.toList());
-    }
-
-    private BigDecimal calculateTotalPrice(List<OrderProduct> orderProducts) {
-        return orderProducts.stream()
-                .map(op -> op.getProduct().getPrice().multiply(BigDecimal.valueOf(op.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    private void sendToDlqTopic(CreateOrderDTO dto) {
+    private void sendToDlq(CreateOrderDTO dto, String message) {
         String dlqTopic = BrokerConstants.Topics.EXTERNAL_AVAILABLE_ORDER_TOPIC + ".dlq";
-        log.info("[PRODUCER]: Enviando {} para DLQ {}", dto.externalId(), dlqTopic);
-        this.producer.produce(dlqTopic, dto.externalId().toString(), jsonConverter.getJsonOfObject(dto));
+        log.info("[PRODUCER]: ENVIANDO {} PARA DLQ {} - MOTIVO: {}", dto.externalId(), dlqTopic, message);
+        producer.produce(dlqTopic, dto.externalId().toString(), jsonConverter.getJsonOfObject(dto));
+        throw new BusinessException(message + " ID " + dto.externalId());
     }
 }

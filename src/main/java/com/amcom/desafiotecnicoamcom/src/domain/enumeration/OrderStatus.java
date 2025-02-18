@@ -4,9 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum OrderStatus {
-    AVAILABLE(0, "DISPONÍVEL"),
-    PROCESSED(1, "PROCESSADO"),
-    INTEGRATED(3, "PEDIDO INTEGRADO");
+    PROCESSED(1, "PROCESSADO");
 
     private final int code;
     private final String description;

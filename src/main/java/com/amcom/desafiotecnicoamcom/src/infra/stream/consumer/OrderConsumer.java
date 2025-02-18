@@ -36,6 +36,7 @@ public class OrderConsumer implements IConsumer {
             log.info("[CONSUMER]: PEDIDO PROCESSADO - ID: {}", order.getId());
         } catch (Exception e) {
             log.error("[CONSUMER] ERROR: {}", e.getMessage());
+            acknowledgment.acknowledge();
         }
     }
 }

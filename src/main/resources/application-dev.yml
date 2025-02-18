@@ -3,6 +3,10 @@ server:
 
 spring:
   datasource:
+    url: jdbc:postgresql://localhost:5432/amcomdb
+    driverClassName: org.postgresql.Driver
+    username: amcom_user
+    password: amcom_password
     hikari:
       minimum-idle: 10
       maximum-pool-size: 20
@@ -13,16 +17,12 @@ spring:
       connection-test-query: SELECT 1
       pool-name: HikariPool-1
       leak-detection-threshold: 2000
-    url: jdbc:h2:mem:amcomdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driverClassName: org.h2.Driver
-    username: amcom_user
-    password: amcom_password
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   h2:
     console:
       enabled: true

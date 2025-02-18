@@ -1,5 +1,17 @@
 version: "2"
 services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: amcom_user
+      POSTGRES_PASSWORD: amcom_password
+      POSTGRES_DB: amcomdb
+    ports:
+      - "5432:5432"
+    networks:
+      - network-kafka
   kafka:
     container_name: kafka
     image: quay.io/strimzi/kafka:latest-kafka-3.1.0-amd64
