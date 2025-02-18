@@ -60,7 +60,7 @@ A aplicação foi organizada na seguinte estrutura de pastas:
 
 ## 📄 Conhecendo o desafio <a name = "desafio"></a>
 
-O desafio pode ser acessado em: [Instruções do desafio](https://github.com/robertotics4/desafio-tecnico-amcom/blob/master/docs/instrucoes.png)
+O desafio pode ser acessado em: [Instruções do desafio](https://github.com/robertotics4/desafio-amcom/blob/main/docs/instrucoes.png)
 
 ## 🏁 Por onde começar? <a name = "inicio"></a>
 
