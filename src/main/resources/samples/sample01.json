@@ -1,15 +1,12 @@
 {
-  "id": "7f5fcb0a-c68b-4f8f-9c8b-97fe3b178b3d",
   "externalId": "c226978a-7e5d-41d5-bcb4-fb6f4d6279d5",
-  "totalPrice": 299.99,
-  "status": 1,
   "products": [
     {
-      "id": "b0d2b7d9-f8e3-4cf1-bf93-354d3d4c80a2",
+      "id": "e80c6fa6-7838-4cc6-a521-be948e7180c1",
       "quantity": 2
     },
     {
-      "id": "a60b8585-9c84-4e1f-a768-70567a53d5ad",
+      "id": "555b98eb-5d5b-4358-9bdc-bc9e6f4f3808",
       "quantity": 3
     }
   ]
