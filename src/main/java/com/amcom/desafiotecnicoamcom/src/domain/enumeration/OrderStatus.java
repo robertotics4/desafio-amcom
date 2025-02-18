@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum OrderStatus {
-    RECEIVED(0, "RECEBIDO"),
+    AVAILABLE(0, "DISPONÍVEL"),
     PROCESSED(1, "PROCESSADO"),
     ERROR(99, "ERRO");
 
