@@ -10,4 +10,15 @@ spring:
   main:
     lazy-initialization: false
   profiles:
-    active: dev
+    active: local
+
+# ACTUATOR INFO - BEGIN
+info:
+  app:
+    name: desafio-tecnico-amcom
+    description: @project.description@
+    version: @project.version@
+    encoding: @project.build.sourceEncoding@
+    java:
+      version: @java.version@
+# ACTUATOR INFO - END
