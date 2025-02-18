@@ -8,7 +8,7 @@ import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
 public class BrokerConfig {
-    private static final int PARTITIONS = 3;
+    private static final int PARTITIONS = 1;
     private static final short REPLICAS = 1;
 
     @Bean

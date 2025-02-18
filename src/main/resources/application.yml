@@ -1,5 +1,13 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: desafio-tecnico-amcom
+  output:
+    ansi:
+      enabled: always
+  main:
+    lazy-initialization: false
   profiles:
     active: dev
