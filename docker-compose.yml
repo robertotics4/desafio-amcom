@@ -12,6 +12,7 @@ services:
       - "5432:5432"
     networks:
       - network-kafka
+
   kafka:
     container_name: kafka
     image: quay.io/strimzi/kafka:latest-kafka-3.1.0-amd64
@@ -43,6 +44,25 @@ services:
     environment:
       KAFKA_BROKERCONNECT: kafka:39092
       SCHEMAREGISTRY_CONNECT: http://schema-registry:8081
+
+  app:
+    build: .
+    container_name: springboot_app
+    depends_on:
+      - postgres
+      - kafka
+    networks:
+      - network-kafka
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: amcomdb
+      DB_USERNAME: amcom_user
+      DB_PASSWORD: amcom_password
+      KAFKA_BOOTSTRAP_SERVERS: kafka:39092
+    ports:
+      - "8080:8080"
 
 networks:
   network-kafka:
