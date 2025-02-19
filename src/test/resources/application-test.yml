@@ -1,0 +1,10 @@
+# application-test.yml
+spring:
+  config:
+    activate:
+      on-profile: test
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+logging:
+  level:
+    org.springframework: DEBUG
