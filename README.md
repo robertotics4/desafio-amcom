@@ -25,6 +25,7 @@
 - [Testes](#testes)
 - [Swagger](#swagger)
 - [Tecnologias utilizadas](#techs)
+- [Melhorias Futuras](#melhorias)
 - [Autores](#autores)
 - [Agradecimentos](#agradecimentos)
 
@@ -155,6 +156,11 @@ Exemplo: http://localhost:8080/swagger-ui/index.html
 - [PostgreSQL](https://www.postgresql.org/) - Banco de dados relacional
 - [Kafka](https://kafka.apache.org/) - Mensageria para escalabilidade
 - [HikariCP](https://github.com/brettwooldridge/HikariCP) - Pool de conexões com banco de dados
+
+## 🔮 Melhorias Futuras <a name="melhorias"></a>
+
+- **Implementação de autenticação/autorização com token JWT**: Melhorar a segurança do sistema garantindo que apenas usuários autenticados possam acessar os recursos da API.
+- **Uso de Protobuf/Schemas para comunicação Kafka**: Melhorar a eficiência e compatibilidade da comunicação assíncrona, garantindo uma estrutura de dados mais compacta e padronizada.
 
 ## ✍️ Autores <a name = "autores"></a>
 
