@@ -175,6 +175,12 @@ http://localhost:[PORTA]/swagger-ui/index.html
 
 Exemplo: http://localhost:8080/swagger-ui/index.html
 
+## 📊 Diagrama de Entidades e Relacionamento (DER)
+
+Abaixo está o Diagrama de Entidades e Relacionamento (DER) que descreve a estrutura do banco de dados e as interações entre as entidades `Order`, `OrderProduct` e `Product`:
+
+![Diagrama de Entidades e Relacionamento](docs/DER.png)
+
 ## ⛏️ Tecnologias utilizadas <a name = "techs"></a>
 
 - [Java](https://www.java.com/) - Linguagem de programação
