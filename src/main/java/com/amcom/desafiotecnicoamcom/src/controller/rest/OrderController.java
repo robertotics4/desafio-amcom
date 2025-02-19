@@ -4,6 +4,7 @@ import com.amcom.desafiotecnicoamcom.src.controller.api.OrderResource;
 import com.amcom.desafiotecnicoamcom.src.domain.entity.Order;
 import com.amcom.desafiotecnicoamcom.src.domain.service.CancelOrderService;
 import com.amcom.desafiotecnicoamcom.src.domain.service.CompleteOrderService;
+import com.amcom.desafiotecnicoamcom.src.domain.service.FindOrderByIdService;
 import com.amcom.desafiotecnicoamcom.src.domain.service.ListOrdersService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ public class OrderController implements OrderResource {
     private final ListOrdersService listOrdersService;
     private final CancelOrderService cancelOrderService;
     private final CompleteOrderService completeOrderService;
+    private final FindOrderByIdService findOrderByIdService;
 
     @Override
     public ResponseEntity<List<Order>> list() {
@@ -37,6 +39,12 @@ public class OrderController implements OrderResource {
     @Override
     public ResponseEntity<Order> complete(UUID orderId) {
         Order order = this.completeOrderService.execute(orderId);
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Order> findById(UUID orderId) {
+        Order order = this.findOrderByIdService.execute(orderId);
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 }
