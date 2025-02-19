@@ -1,4 +1,3 @@
-
 <p align="center">
   <a href="" rel="noopener">
  <img src="https://amcom.com.br/wp-content/uploads/2023/10/MicrosoftTeams-image-116.png" alt="Logo da AMcom" style="width: 400px; height: auto;">
@@ -24,6 +23,8 @@
 - [Estratégia de Execução](#estrategia-execucao)
 - [Por onde começar?](#inicio)
 - [Como usar?](#como_usar)
+- [Rodando com Docker Compose](#docker_compose)
+- [Kafdrop - Monitoramento do Kafka](#kafdrop)
 - [Testes](#testes)
 - [Swagger](#swagger)
 - [Tecnologias utilizadas](#techs)
@@ -44,112 +45,64 @@ A aplicação foi organizada na seguinte estrutura de pastas:
 - **src/main/java/com/amcom/desafiotecnicoamcom/controller**: responsável pela exposição dos recursos da aplicação.
 - **src/main/java/com/amcom/desafiotecnicoamcom/config**: contém todas as configurações do projeto
 
-### Funcionalidades Implementadas
+## 🚀 Rodando com Docker Compose <a name="docker_compose"></a>
 
-#### 📦 Pedidos
+A aplicação pode ser executada utilizando **Docker Compose**, garantindo um ambiente padronizado com todas as dependências corretamente configuradas.
 
-- Receber pedidos de um sistema externo A.
-- Gerenciar e calcular o total dos pedidos.
-- Disponibilizar os pedidos para o sistema externo B.
-- Cada pedido contém:
-  - id (autogerado)
-  - lista de produtos (com quantidade de cada um)
-  - total do pedido
-  - status
-- Validações ao criar um pedido:
-  - Verificação de duplicação de pedidos.
-  - Garantia de disponibilidade do serviço para alta volumetria.
-  - Garantia de consistência dos dados e concorrência.
-  - Análise de impacto no banco de dados.
+### Requisitos:
 
-## 📄 Conhecendo o desafio <a name = "desafio"></a>
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
 
-O desafio pode ser acessado em: [Instruções do desafio](https://github.com/robertotics4/desafio-amcom/blob/main/docs/instrucoes.png)
+### Passos para rodar a aplicação:
 
-## 🚀 Estratégia Aplicada <a name = "estrategia"></a>
-
-Para atender os requisitos do desafio, foram adotadas as seguintes estratégias:
-
-- **Kafka para comunicação assíncrona**: Utilizou-se **Apache Kafka** para comunicação entre produtores e consumidores externos, garantindo a escalabilidade do sistema.
-- **Configuração para réplicas**: A estrutura foi preparada para suportar múltiplas réplicas nas configurações do Kafka.
-- **Otimização de buscas e inserts**: Consultas e operações foram otimizadas no banco de dados para garantir um alto desempenho.
-- **Uso de transações quando necessário**: Para manter a consistência dos dados, transações foram implementadas em algumas situações no banco de dados.
-- **Pool de conexões com HikariCP**: Utilizou-se **HikariCP** para gerenciar o pool de conexões com o banco de dados, melhorando a performance e eficiência do sistema.
-
-## 🚀 Estratégia de Execução <a name = "estrategia-execucao"></a>
-
-A estratégia abordada para a execução do desafio foi focada na comunicação assíncrona com Kafka e na persistência de dados de pedidos. O fluxo de dados segue a sequência descrita abaixo:
-
-- **Entrada de pedidos**:  
-  Os pedidos entram inicialmente pelo tópico `amcom.external.available_order`, com a seguinte estrutura de mensagem:
-  ```json
-  {
-    "externalId": "e15da8b8-5f07-4fbb-92f7-6902bcb54f1f",
-    "products": [
-      {
-        "id": "3ed2d326-6588-4731-b2f1-7b49b8ccfe8a",
-        "quantity": 1
-      }
-    ]
-  }
-  ```
-  Ao consumir a mensagem do Kafka, o pedido passa por toda a validação e é criado no banco de dados. Um seed foi preparado para que sejam criados alguns produtos de exemplo.
-
-- **Gerenciamento do pedido**:  
-  A aplicação oferece algumas rotas para gerenciar o estado dos pedidos, com ações como:
-  - Concluir o pedido
-  - Cancelar o pedido
-
-- **Envio do pedido processado**:  
-  Quando o pedido é concluído, ele é automaticamente enviado para o tópico `amcom.external.processed_order` para que o sistema externo B possa processar a informação.
-
-Essa estratégia de uso do Kafka permite garantir uma comunicação eficiente e escalável entre os sistemas, além de permitir a persistência e manipulação dos dados dos pedidos de forma consistente.
-
-## 🏁 Por onde começar? <a name = "inicio"></a>
-
-A aplicação foi desenvolvida com **Spring Boot** e utiliza um **banco de dados relacional**.
-
-### Pré-requisitos
-
-- Java 17+
-- Maven
-- Docker
-
-### Instalando as dependências
-
-Para instalar as dependências, execute:
+1. Certifique-se de que o Docker e o Docker Compose estão instalados em seu ambiente.
+2. Navegue até o diretório raiz do projeto.
+3. Execute o seguinte comando para iniciar os containers:
 
 ```bash
-mvn clean install
+ docker-compose up --build
 ```
 
-## 🎈 Como usar? <a name="como_usar"></a>
+Isso irá:
+- Criar e iniciar os containers do PostgreSQL, Kafka e da aplicação.
+- Compilar a aplicação e rodá-la dentro do container.
+- Expor as portas necessárias para que a aplicação possa ser acessada.
 
-### Iniciar a API
+### Acessando a aplicação:
+Após iniciar os containers, a API estará disponível no seguinte endereço:
 
+```
+http://localhost:8080
+```
+
+Para verificar os logs da aplicação, utilize:
 ```bash
-mvn spring-boot:run
+ docker-compose logs -f
 ```
 
-OBS: para iniciar a aplicação sem docker será necessário criar um arquivo `.env` com as seguintes variáveis de ambiente (exemplo):
-
-```env
-# Database Configuration
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=amcomdb
-DB_USERNAME=amcom_user
-DB_PASSWORD=amcom_password
-
-# Kafka Configuration
-KAFKA_BOOTSTRAP_SERVERS=PLAINTEXT://localhost:19092
-```  
-
-### Usando Docker
-
+Para parar e remover os containers:
 ```bash
-docker-compose up
+ docker-compose down
 ```
+
+## 📊 Kafdrop - Monitoramento do Kafka <a name = "kafdrop"></a>
+
+O **Kafdrop** é uma ferramenta de UI para monitorar tópicos, mensagens e consumidores do Kafka. Ele está incluído no `docker-compose.yml` para facilitar o monitoramento do Kafka na aplicação.
+
+### Acessando o Kafdrop
+
+Após iniciar os containers com `docker-compose up`, o Kafdrop estará disponível no seguinte endereço:
+
+```
+http://localhost:19000
+```
+
+Com ele, você pode visualizar:
+- Tópicos do Kafka
+- Mensagens enviadas
+- Status dos consumidores
+- Partições e offsets
 
 ## ✅ Testes <a name = "testes"></a>
 
@@ -175,12 +128,6 @@ http://localhost:[PORTA]/swagger-ui/index.html
 
 Exemplo: http://localhost:8080/swagger-ui/index.html
 
-## 📊 Diagrama de Entidades e Relacionamento (DER)
-
-Abaixo está o Diagrama de Entidades e Relacionamento (DER) que descreve a estrutura do banco de dados e as interações entre as entidades `Order`, `OrderProduct` e `Product`:
-
-![Diagrama de Entidades e Relacionamento](docs/DER.png)
-
 ## ⛏️ Tecnologias utilizadas <a name = "techs"></a>
 
 - [Java](https://www.java.com/) - Linguagem de programação
@@ -193,11 +140,7 @@ Abaixo está o Diagrama de Entidades e Relacionamento (DER) que descreve a estru
 - [PostgreSQL](https://www.postgresql.org/) - Banco de dados relacional
 - [Kafka](https://kafka.apache.org/) - Mensageria para escalabilidade
 - [HikariCP](https://github.com/brettwooldridge/HikariCP) - Pool de conexões com banco de dados
-
-## 🔮 Melhorias Futuras <a name="melhorias"></a>
-
-- **Implementação de autenticação/autorização com token JWT**: Melhorar a segurança do sistema garantindo que apenas usuários autenticados possam acessar os recursos da API.
-- **Uso de Protobuf/Schemas para comunicação Kafka**: Melhorar a eficiência e compatibilidade da comunicação assíncrona, garantindo uma estrutura de dados mais compacta e padronizada.
+- [Kafdrop](https://github.com/obsidiandynamics/kafdrop) - UI para monitoramento do Kafka
 
 ## ✍️ Autores <a name = "autores"></a>
 
