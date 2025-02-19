@@ -3,6 +3,7 @@ package com.amcom.desafiotecnicoamcom.src.controller.rest;
 import com.amcom.desafiotecnicoamcom.src.controller.api.OrderResource;
 import com.amcom.desafiotecnicoamcom.src.domain.entity.Order;
 import com.amcom.desafiotecnicoamcom.src.domain.service.CancelOrderService;
+import com.amcom.desafiotecnicoamcom.src.domain.service.CompleteOrderService;
 import com.amcom.desafiotecnicoamcom.src.domain.service.ListOrdersService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.util.UUID;
 public class OrderController implements OrderResource {
     private final ListOrdersService listOrdersService;
     private final CancelOrderService cancelOrderService;
+    private final CompleteOrderService completeOrderService;
 
     @Override
     public ResponseEntity<List<Order>> list() {
@@ -27,7 +29,14 @@ public class OrderController implements OrderResource {
     }
 
     @Override
-    public ResponseEntity<Void> cancel(UUID orderId) {
-        this.cancelOrderService.execute(orderId);
+    public ResponseEntity<Order> cancel(UUID orderId) {
+        Order order = this.cancelOrderService.execute(orderId);
+        return new ResponseEntity<>(order, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Order> complete(UUID orderId) {
+        Order order = this.completeOrderService.execute(orderId);
+        return new ResponseEntity<>(order, HttpStatus.OK);
     }
 }

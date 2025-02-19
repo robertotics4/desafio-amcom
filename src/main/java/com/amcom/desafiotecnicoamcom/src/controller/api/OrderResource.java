@@ -35,5 +35,15 @@ public interface OrderResource {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
     })
     @DeleteMapping(value = "/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<Void> cancel(@PathVariable UUID orderId);
+    ResponseEntity<Order> cancel(@PathVariable UUID orderId);
+
+    @Operation(summary = "Endpoint para concluir um pedido")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pedido concluído com sucesso."),
+            @ApiResponse(responseCode = "400", description = "Requisição com formato inválido.", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Pedido não encontrado.", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content)
+    })
+    @PutMapping(value = "/{orderId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<Order> complete(@PathVariable UUID orderId);
 }
