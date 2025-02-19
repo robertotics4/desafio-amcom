@@ -2,7 +2,6 @@ package com.amcom.desafiotecnicoamcom.src.domain.service;
 
 import com.amcom.desafiotecnicoamcom.src.config.jackson.JsonConverter;
 import com.amcom.desafiotecnicoamcom.src.domain.contract.ICreateOrderService;
-import com.amcom.desafiotecnicoamcom.src.domain.contract.IIntegrateOrderService;
 import com.amcom.desafiotecnicoamcom.src.domain.dto.CreateOrderDTO;
 import com.amcom.desafiotecnicoamcom.src.domain.dto.ProductOrderDTO;
 import com.amcom.desafiotecnicoamcom.src.domain.entity.Order;
@@ -17,8 +16,6 @@ import com.amcom.desafiotecnicoamcom.src.support.constants.BrokerConstants;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -33,7 +30,6 @@ public class CreateOrderService implements ICreateOrderService {
     private final ProductRepository productRepository;
     private final IProducer producer;
     private final JsonConverter jsonConverter;
-    private final IIntegrateOrderService integrateOrderService;
 
     @Override
     @Transactional
@@ -45,9 +41,8 @@ public class CreateOrderService implements ICreateOrderService {
         }
 
         List<OrderProduct> orderProducts = mapOrderProducts(dto);
-        Order order = buildOrder(dto.externalId(), orderProducts);
 
-        return this.integrateOrderService.execute(order);
+        return buildOrder(dto.externalId(), orderProducts);
     }
 
     private List<OrderProduct> mapOrderProducts(CreateOrderDTO dto) {
@@ -82,7 +77,7 @@ public class CreateOrderService implements ICreateOrderService {
 
         Order order = Order.builder()
                 .externalId(externalId)
-                .status(OrderStatus.PROCESSED)
+                .status(OrderStatus.PENDING)
                 .totalPrice(totalPrice)
                 .orderProducts(orderProducts)
                 .build();
