@@ -70,11 +70,11 @@ O desafio pode ser acessado em: [Instruções do desafio](https://github.com/rob
 
 Para atender os requisitos do desafio, foram adotadas as seguintes estratégias:
 
-- **Kafka para comunicação assíncrona**: Utilizei **Apache Kafka** para comunicação entre produtores e consumidores externos, garantindo a escalabilidade do sistema.
-- **Configuração para réplicas**: Deixei a estrutura preparada para suportar múltiplas réplicas nas configurações do Kafka.
-- **Otimização de buscas e inserts**: Foram implementadas consultas e operações otimizadas no banco de dados para garantir um alto desempenho.
-- **Uso de transações quando necessário**: Para manter a consistência dos dados, em algumas situações utilizei transações no banco de dados.
-- **Pool de conexões com HikariCP**: Utilizei **HikariCP** para gerenciar o pool de conexões com o banco de dados, melhorando a performance e eficiência do sistema.
+- **Kafka para comunicação assíncrona**: Utilizou-se **Apache Kafka** para comunicação entre produtores e consumidores externos, garantindo a escalabilidade do sistema.
+- **Configuração para réplicas**: A estrutura foi preparada para suportar múltiplas réplicas nas configurações do Kafka.
+- **Otimização de buscas e inserts**: Consultas e operações foram otimizadas no banco de dados para garantir um alto desempenho.
+- **Uso de transações quando necessário**: Para manter a consistência dos dados, transações foram implementadas em algumas situações no banco de dados.
+- **Pool de conexões com HikariCP**: Utilizou-se **HikariCP** para gerenciar o pool de conexões com o banco de dados, melhorando a performance e eficiência do sistema.
 
 ## 🚀 Estratégia de Execução <a name = "estrategia-execucao"></a>
 
@@ -93,7 +93,7 @@ A estratégia abordada para a execução do desafio foi focada na comunicação 
     ]
   }
   ```
-  Ao consumir a mensagem do Kafka, o pedido passa por toda a validação e é criado no banco de dados. Deixei um seed pronto para que sejam criados alguns produtos de exemplo.
+  Ao consumir a mensagem do Kafka, o pedido passa por toda a validação e é criado no banco de dados. Um seed foi preparado para que sejam criados alguns produtos de exemplo.
 
 - **Gerenciamento do pedido**:  
   A aplicação oferece algumas rotas para gerenciar o estado dos pedidos, com ações como:
