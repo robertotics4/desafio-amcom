@@ -1,3 +1,4 @@
+
 <p align="center">
   <a href="" rel="noopener">
  <img src="https://amcom.com.br/wp-content/uploads/2023/10/MicrosoftTeams-image-116.png" alt="Logo da AMcom" style="width: 400px; height: auto;">
@@ -20,6 +21,7 @@
 - [Sobre a aplicação](#sobre)
 - [Desafio](#desafio)
 - [Estratégia Aplicada](#estrategia)
+- [Estratégia de Execução](#estrategia-execucao)
 - [Por onde começar?](#inicio)
 - [Como usar?](#como_usar)
 - [Testes](#testes)
@@ -73,6 +75,35 @@ Para atender os requisitos do desafio, foram adotadas as seguintes estratégias:
 - **Otimização de buscas e inserts**: Foram implementadas consultas e operações otimizadas no banco de dados para garantir um alto desempenho.
 - **Uso de transações quando necessário**: Para manter a consistência dos dados, em algumas situações utilizei transações no banco de dados.
 - **Pool de conexões com HikariCP**: Utilizei **HikariCP** para gerenciar o pool de conexões com o banco de dados, melhorando a performance e eficiência do sistema.
+
+## 🚀 Estratégia de Execução <a name = "estrategia-execucao"></a>
+
+A estratégia abordada para a execução do desafio foi focada na comunicação assíncrona com Kafka e na persistência de dados de pedidos. O fluxo de dados segue a sequência descrita abaixo:
+
+- **Entrada de pedidos**:  
+  Os pedidos entram inicialmente pelo tópico `amcom.external.available_order`, com a seguinte estrutura de mensagem:
+  ```json
+  {
+    "externalId": "e15da8b8-5f07-4fbb-92f7-6902bcb54f1f",
+    "products": [
+      {
+        "id": "3ed2d326-6588-4731-b2f1-7b49b8ccfe8a",
+        "quantity": 1
+      }
+    ]
+  }
+  ```
+  Ao consumir a mensagem do Kafka, o produto presente no pedido é salvo no banco de dados.
+
+- **Gerenciamento do pedido**:  
+  A aplicação oferece algumas rotas para gerenciar o estado dos pedidos, com ações como:
+  - Concluir o pedido
+  - Cancelar o pedido
+
+- **Envio do pedido processado**:  
+  Quando o pedido é concluído, ele é automaticamente enviado para o tópico `amcom.external.processed_order` para que o sistema externo B possa processar a informação.
+
+Essa estratégia de uso do Kafka permite garantir uma comunicação eficiente e escalável entre os sistemas, além de permitir a persistência e manipulação dos dados dos pedidos de forma consistente.
 
 ## 🏁 Por onde começar? <a name = "inicio"></a>
 

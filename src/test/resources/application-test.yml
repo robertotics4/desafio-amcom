@@ -1,4 +1,3 @@
-# application-test.yml
 spring:
   config:
     activate:
