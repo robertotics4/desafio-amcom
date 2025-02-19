@@ -19,6 +19,7 @@
 
 - [Sobre a aplicação](#sobre)
 - [Desafio](#desafio)
+- [Estratégia Aplicada](#estrategia)
 - [Por onde começar?](#inicio)
 - [Como usar?](#como_usar)
 - [Testes](#testes)
@@ -48,19 +49,29 @@ A aplicação foi organizada na seguinte estrutura de pastas:
 - Gerenciar e calcular o total dos pedidos.
 - Disponibilizar os pedidos para o sistema externo B.
 - Cada pedido contém:
-    - id (autogerado)
-    - lista de produtos (com quantidade de cada um)
-    - total do pedido
-    - status
+  - id (autogerado)
+  - lista de produtos (com quantidade de cada um)
+  - total do pedido
+  - status
 - Validações ao criar um pedido:
-    - Verificação de duplicação de pedidos.
-    - Garantia de disponibilidade do serviço para alta volumetria.
-    - Garantia de consistência dos dados e concorrência.
-    - Análise de impacto no banco de dados.
+  - Verificação de duplicação de pedidos.
+  - Garantia de disponibilidade do serviço para alta volumetria.
+  - Garantia de consistência dos dados e concorrência.
+  - Análise de impacto no banco de dados.
 
 ## 📄 Conhecendo o desafio <a name = "desafio"></a>
 
 O desafio pode ser acessado em: [Instruções do desafio](https://github.com/robertotics4/desafio-amcom/blob/main/docs/instrucoes.png)
+
+## 🚀 Estratégia Aplicada <a name = "estrategia"></a>
+
+Para atender os requisitos do desafio, foram adotadas as seguintes estratégias:
+
+- **Kafka para comunicação assíncrona**: Utilizei **Apache Kafka** para comunicação entre produtores e consumidores externos, garantindo a escalabilidade do sistema.
+- **Configuração para réplicas**: Deixei a estrutura preparada para suportar múltiplas réplicas nas configurações do Kafka.
+- **Otimização de buscas e inserts**: Foram implementadas consultas e operações otimizadas no banco de dados para garantir um alto desempenho.
+- **Uso de transações quando necessário**: Para manter a consistência dos dados, em algumas situações utilizei transações no banco de dados.
+- **Pool de conexões com HikariCP**: Utilizei **HikariCP** para gerenciar o pool de conexões com o banco de dados, melhorando a performance e eficiência do sistema.
 
 ## 🏁 Por onde começar? <a name = "inicio"></a>
 
@@ -143,6 +154,7 @@ Exemplo: http://localhost:8080/swagger-ui/index.html
 - [JPA](https://jakarta.ee/specifications/persistence/) - Persistência de dados
 - [PostgreSQL](https://www.postgresql.org/) - Banco de dados relacional
 - [Kafka](https://kafka.apache.org/) - Mensageria para escalabilidade
+- [HikariCP](https://github.com/brettwooldridge/HikariCP) - Pool de conexões com banco de dados
 
 ## ✍️ Autores <a name = "autores"></a>
 
