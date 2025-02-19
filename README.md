@@ -93,7 +93,7 @@ A estratégia abordada para a execução do desafio foi focada na comunicação 
     ]
   }
   ```
-  Ao consumir a mensagem do Kafka, o produto presente no pedido é salvo no banco de dados.
+  Ao consumir a mensagem do Kafka, o pedido passa por toda a validação e é criado no banco de dados. Deixei um seed pronto para que sejam criados alguns produtos de exemplo.
 
 - **Gerenciamento do pedido**:  
   A aplicação oferece algumas rotas para gerenciar o estado dos pedidos, com ações como:
